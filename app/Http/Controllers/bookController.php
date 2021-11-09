@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Book;
+use App\Http\Resources\BookResource;
 
 class bookController extends Controller
 {
@@ -15,7 +16,7 @@ class bookController extends Controller
     public function index()
     {
         //
-        return Book::get()->sortByDesc('id');
+        return BookResource::collection(Book::latest()->get());
 
     }
 
@@ -34,8 +35,8 @@ class bookController extends Controller
         ]);
         $Book=new Book();
         $Book->author_id=$request->author_id;
-        $Book->title->$request->title;
-        $Book->body->$request->body;
+        $Book->title=$request->title;
+        $Book->body=$request->body;
         $Book->save();
 
         return response()->json(['message'=>'Book created'],201);
@@ -68,7 +69,7 @@ class bookController extends Controller
             'title'=>'min:3|max:10',
             'body'=>'min:3|max:50'
         ]);
-        $Book=Book::findOrFail($id);
+        $Book=new BookResource(Book::findOrFail($id));
         $Book->author_id=$request->author_id;
         $Book->title->$request->title;
         $Book->body->$request->body;

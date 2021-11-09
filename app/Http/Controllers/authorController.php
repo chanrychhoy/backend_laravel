@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Author;
+use App\Http\Resources\AuthorResource;
 
 
 class authorController extends Controller
@@ -16,7 +17,7 @@ class authorController extends Controller
     public function index()
     {
         //
-        return Author::get()->take(3);
+        return AuthorResource::collection(Author::get()->take(3));
     }
 
     /**
@@ -70,7 +71,7 @@ class authorController extends Controller
             'age'=>'min:1|max:10',
             'province'=>'nullable'
         ]);
-        $Author=Author::findOrFail($id);
+        $Author=new AuthorResource(Author::findOrFail($id));
         $Author->name=$request->name;
         $Author->age=$request->age; 
         $Author->province=$request->province;
